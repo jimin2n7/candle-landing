@@ -10,6 +10,7 @@ const products = [
     burnTime: '40-45 giờ',
     price: '285.000',
     number: '01',
+    image: '/images/product-lemongrass.jpg',
   },
   {
     name: 'Cà Phê Buôn Mê',
@@ -19,6 +20,7 @@ const products = [
     burnTime: '40-45 giờ',
     price: '315.000',
     number: '02',
+    image: '/images/product-coffee.jpg',
   },
   {
     name: 'Bưởi & Bạc Hà',
@@ -28,12 +30,15 @@ const products = [
     burnTime: '40-45 giờ',
     price: '285.000',
     number: '03',
+    image: '/images/product-citrus.jpg',
   },
 ]
 
 function ProductCard({ product, index }: { product: typeof products[0]; index: number }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+
+  const isEven = index % 2 === 0
 
   return (
     <motion.div
@@ -43,67 +48,78 @@ function ProductCard({ product, index }: { product: typeof products[0]; index: n
       transition={{ duration: 1, delay: index * 0.2, ease: [0.22, 1, 0.36, 1] }}
       className="group relative"
     >
-      {/* Number */}
-      <motion.span
-        className="font-serif text-[8rem] md:text-[12rem] leading-none text-cream/[0.03] absolute -top-8 md:-top-12 -left-2 md:-left-4 select-none pointer-events-none group-hover:text-amber/10 transition-colors duration-1000"
-      >
-        {product.number}
-      </motion.span>
-
-      {/* Card */}
-      <div className="relative border border-cream/5 hover:border-amber/20 transition-all duration-700 p-6 md:p-8 lg:p-10 bg-soot hover:bg-cream/[0.02]">
-        {/* Top accent line */}
+      <div className={`flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} gap-6 md:gap-10 lg:gap-14 items-center`}>
+        {/* Image */}
         <motion.div
-          initial={{ scaleX: 0 }}
-          animate={isInView ? { scaleX: 1 } : {}}
-          transition={{ duration: 1.2, delay: index * 0.2 + 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber/40 to-transparent origin-left"
-        />
+          className="relative w-full md:w-1/2 aspect-[4/5] overflow-hidden"
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110"
+          />
+          {/* Overlay on hover */}
+          <div className="absolute inset-0 bg-soot/0 group-hover:bg-soot/20 transition-colors duration-700" />
+          {/* Number overlay */}
+          <span className="absolute bottom-4 left-4 md:bottom-6 md:left-6 font-serif text-6xl md:text-8xl text-cream/10 select-none pointer-events-none group-hover:text-amber/20 transition-colors duration-700">
+            {product.number}
+          </span>
+          {/* Corner accents */}
+          <div className="absolute top-4 left-4 w-6 h-6 border-t border-l border-cream/10 group-hover:border-amber/30 transition-colors duration-700" />
+          <div className="absolute bottom-4 right-4 w-6 h-6 border-b border-r border-cream/10 group-hover:border-amber/30 transition-colors duration-700" />
+        </motion.div>
 
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 md:gap-10">
-          <div className="flex-1">
-            <p className="text-[10px] tracking-[0.4em] uppercase text-amber/40 mb-4">
-              {product.english}
-            </p>
-            <h3 className="font-serif text-4xl md:text-5xl lg:text-6xl font-light text-cream mb-4 group-hover:text-amber transition-colors duration-700">
-              {product.name}
-            </h3>
-            <p className="text-sm text-cream/30 leading-relaxed max-w-sm font-light mb-6">
-              {product.description}
-            </p>
+        {/* Info */}
+        <div className="w-full md:w-1/2 py-4 md:py-8">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={isInView ? { width: 48 } : {}}
+            transition={{ duration: 0.8, delay: index * 0.2 + 0.3 }}
+            className="h-px bg-amber/40 mb-6"
+          />
 
-            {/* Notes */}
-            <div className="flex flex-wrap gap-2">
-              {product.notes.map((note) => (
-                <span
-                  key={note}
-                  className="text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 border border-cream/10 text-cream/30 group-hover:border-amber/20 group-hover:text-amber/50 transition-all duration-500"
-                >
-                  {note}
-                </span>
-              ))}
-            </div>
+          <p className="text-[10px] tracking-[0.4em] uppercase text-amber/40 mb-3">
+            {product.english}
+          </p>
+          <h3 className="font-serif text-4xl md:text-5xl lg:text-6xl font-light text-cream mb-5 group-hover:text-amber transition-colors duration-700">
+            {product.name}
+          </h3>
+          <p className="text-sm text-cream/30 leading-relaxed max-w-sm font-light mb-6">
+            {product.description}
+          </p>
+
+          {/* Notes */}
+          <div className="flex flex-wrap gap-2 mb-8">
+            {product.notes.map((note) => (
+              <span
+                key={note}
+                className="text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 border border-cream/10 text-cream/30 group-hover:border-amber/20 group-hover:text-amber/50 transition-all duration-500"
+              >
+                {note}
+              </span>
+            ))}
           </div>
 
-          {/* Right side — price & burn time */}
-          <div className="flex md:flex-col gap-8 md:gap-6 md:items-end md:text-right shrink-0">
+          {/* Price & CTA */}
+          <div className="flex items-end justify-between gap-6">
             <div>
               <p className="text-[9px] tracking-[0.3em] uppercase text-cream/20 mb-1">Thời gian cháy</p>
               <p className="text-sm text-cream/50 font-light">{product.burnTime}</p>
             </div>
-            <div>
-              <p className="text-[9px] tracking-[0.3em] uppercase text-cream/20 mb-1">Giá</p>
+            <div className="text-right">
               <p className="font-serif text-3xl md:text-4xl text-cream group-hover:text-amber transition-colors duration-500">
                 {product.price}<span className="text-lg text-cream/20">đ</span>
               </p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="mt-3 text-[10px] tracking-[0.3em] uppercase px-6 py-3 border border-amber/30 text-amber/60 hover:bg-amber hover:text-soot transition-all duration-500"
+              >
+                Đặt mua
+              </motion.button>
             </div>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="mt-auto text-[10px] tracking-[0.3em] uppercase px-6 py-3 border border-amber/30 text-amber/60 hover:bg-amber hover:text-soot transition-all duration-500"
-            >
-              Đặt mua
-            </motion.button>
           </div>
         </div>
       </div>
@@ -144,7 +160,7 @@ export default function Products() {
             <motion.span
               initial={{ width: 0 }}
               animate={isInView ? { width: 48 } : {}}
-              transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1, delay: 0.3 }}
               className="h-px bg-amber/40"
             />
             <span className="text-[10px] tracking-[0.4em] uppercase text-amber/40">Bộ sưu tập</span>
@@ -158,8 +174,8 @@ export default function Products() {
           </p>
         </motion.div>
 
-        {/* Products */}
-        <div className="space-y-6 md:space-y-8">
+        {/* Products — alternating layout */}
+        <div className="space-y-20 md:space-y-32">
           {products.map((product, i) => (
             <ProductCard key={product.name} product={product} index={i} />
           ))}

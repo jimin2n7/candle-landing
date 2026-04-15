@@ -28,7 +28,7 @@ export default function Story() {
     offset: ['start end', 'end start'],
   })
   const y1 = useTransform(scrollYProgress, [0, 1], ['10%', '-10%'])
-  const y2 = useTransform(scrollYProgress, [0, 1], ['-5%', '5%'])
+  const imgY = useTransform(scrollYProgress, [0, 1], ['5%', '-5%'])
 
   return (
     <section id="story" ref={sectionRef} className="relative py-24 md:py-40 bg-cream overflow-hidden">
@@ -36,10 +36,6 @@ export default function Story() {
       <motion.div
         style={{ y: y1 }}
         className="absolute top-20 right-0 w-72 h-72 md:w-96 md:h-96 rounded-full bg-amber/5 blur-3xl"
-      />
-      <motion.div
-        style={{ y: y2 }}
-        className="absolute bottom-20 left-0 w-60 h-60 md:w-80 md:h-80 rounded-full bg-sage/10 blur-3xl"
       />
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
@@ -61,21 +57,45 @@ export default function Story() {
           <span className="text-[10px] tracking-[0.2em] text-bark/20 ml-auto hidden md:block">03</span>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
-          {/* Left: big heading */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Left: image with parallax */}
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="relative order-2 lg:order-1"
+          >
+            <div className="relative aspect-[4/5] overflow-hidden">
+              <motion.img
+                style={{ y: imgY }}
+                src="/images/story.jpg"
+                alt="Qu trình làm nến thủ công"
+                className="w-full h-[120%] object-cover -top-[10%] absolute"
+              />
+              {/* Overlay gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-cream/30 via-transparent to-transparent" />
+              {/* Corner accents */}
+              <div className="absolute top-4 left-4 w-8 h-8 border-t border-l border-bark/20" />
+              <div className="absolute bottom-4 right-4 w-8 h-8 border-b border-r border-bark/20" />
+            </div>
+          </motion.div>
+
+          {/* Right: text & values */}
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="order-1 lg:order-2"
           >
-            <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-light text-charcoal leading-[1.05] mb-10">
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-light text-charcoal leading-[1.05] mb-8">
               Từ một góc bếp
               <br />
               <span className="italic text-bark-dark">tới nhà của bạn</span>
             </h2>
 
-            <div className="space-y-5 text-charcoal-light/70 font-light leading-relaxed text-sm md:text-base">
+            <div className="space-y-4 text-charcoal-light/70 font-light leading-relaxed text-sm md:text-base mb-10">
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -104,41 +124,35 @@ export default function Story() {
                 hít thở sâu, và tìm về sự bình yên trong chính mình.
               </motion.p>
             </div>
-          </motion.div>
 
-          {/* Right: values */}
-          <div className="space-y-1">
-            {values.map((val, i) => (
-              <motion.div
-                key={val.title}
-                initial={{ opacity: 0, x: 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.8, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
-                className="group relative border-t border-charcoal/10 pt-8 pb-10 hover:bg-bark/[0.03] transition-colors duration-700 px-4 md:px-8 -mx-4 md:-mx-8"
-              >
-                <div className="flex items-start gap-6 md:gap-10">
-                  <span className="font-serif text-5xl md:text-6xl text-charcoal/10 group-hover:text-bark/30 transition-colors duration-700 shrink-0 leading-none">
-                    {val.number}
-                  </span>
-                  <div>
-                    <h3 className="font-serif text-2xl md:text-3xl text-charcoal mb-3 group-hover:text-bark-dark transition-colors duration-500">
-                      {val.title}
-                    </h3>
-                    <p className="text-sm text-charcoal-light/60 font-light leading-relaxed max-w-sm">
-                      {val.text}
-                    </p>
-                  </div>
-                </div>
-                {/* Hover accent */}
+            {/* Values */}
+            <div className="space-y-1">
+              {values.map((val, i) => (
                 <motion.div
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  className="absolute bottom-0 left-0 right-0 h-px bg-bark/20 origin-left"
-                />
-              </motion.div>
-            ))}
-          </div>
+                  key={val.title}
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.4 + i * 0.12 }}
+                  className="group border-t border-charcoal/10 pt-5 pb-6 hover:bg-bark/[0.03] transition-colors duration-700 px-4 -mx-4"
+                >
+                  <div className="flex items-start gap-5">
+                    <span className="font-serif text-3xl text-charcoal/10 group-hover:text-bark/30 transition-colors duration-700 shrink-0 leading-none">
+                      {val.number}
+                    </span>
+                    <div>
+                      <h3 className="font-serif text-xl md:text-2xl text-charcoal mb-1.5 group-hover:text-bark-dark transition-colors duration-500">
+                        {val.title}
+                      </h3>
+                      <p className="text-xs md:text-sm text-charcoal-light/60 font-light leading-relaxed">
+                        {val.text}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
